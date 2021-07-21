@@ -1,82 +1,129 @@
-import Head from 'next/head'
+import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/react/solid'
 
-export default function Home() {
+const stats = [
+  { name: 'Total Subscribers', stat: '71,897', previousStat: '70,946', change: '12%', changeType: 'increase' },
+  { name: 'Avg. Open Rate', stat: '58.16%', previousStat: '56.14%', change: '2.02%', changeType: 'increase' },
+  { name: 'Avg. Click Rate', stat: '24.57%', previousStat: '28.62%', change: '4.05%', changeType: 'decrease' },
+]
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
+export default function Example() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div>
+      <h3 className="text-lg leading-6 font-medium text-gray-900">Last 30 days</h3>
+      <dl className="mt-5 grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+        {stats.map((item) => (
+          <div key={item.name} className="px-4 py-5 sm:p-6">
+            <dt className="text-base font-normal text-gray-900">{item.name}</dt>
+            <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
+              <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+                {item.stat}
+                <span className="ml-2 text-sm font-medium text-gray-500">from {item.previousStat}</span>
+              </div>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+              <div
+                className={classNames(
+                  item.changeType === 'increase' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+                  'inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0'
+                )}
+              >
+                {item.changeType === 'increase' ? (
+                  <ArrowSmUpIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <ArrowSmDownIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-red-500"
+                    aria-hidden="true"
+                  />
+                )}
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.js
-          </code>
-        </p>
+                <span className="sr-only">{item.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
+                {item.change}
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <br/>
 
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
+      <h3 className="text-lg leading-6 font-medium text-gray-900">Last 60 days</h3>
+      <dl className="mt-5 grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+        {stats.map((item) => (
+          <div key={item.name} className="px-4 py-5 sm:p-6">
+            <dt className="text-base font-normal text-gray-900">{item.name}</dt>
+            <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
+              <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+                {item.stat}
+                <span className="ml-2 text-sm font-medium text-gray-500">from {item.previousStat}</span>
+              </div>
 
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
+              <div
+                className={classNames(
+                  item.changeType === 'increase' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+                  'inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0'
+                )}
+              >
+                {item.changeType === 'increase' ? (
+                  <ArrowSmUpIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <ArrowSmDownIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-red-500"
+                    aria-hidden="true"
+                  />
+                )}
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
+                <span className="sr-only">{item.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
+                {item.change}
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <br/>
+      <h3 className="text-lg leading-6 font-medium text-gray-900">All Time Views</h3>
+      <dl className="mt-5 grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+        {stats.map((item) => (
+          <div key={item.name} className="px-4 py-5 sm:p-6">
+            <dt className="text-base font-normal text-gray-900">{item.name}</dt>
+            <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
+              <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+                {item.stat}
+                <span className="ml-2 text-sm font-medium text-gray-500">from {item.previousStat}</span>
+              </div>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+              <div
+                className={classNames(
+                  item.changeType === 'increase' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+                  'inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0'
+                )}
+              >
+                {item.changeType === 'increase' ? (
+                  <ArrowSmUpIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <ArrowSmDownIcon
+                    className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-red-500"
+                    aria-hidden="true"
+                  />
+                )}
 
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
-        </a>
-      </footer>
+                <span className="sr-only">{item.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
+                {item.change}
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
     </div>
-  )
+  );
 }

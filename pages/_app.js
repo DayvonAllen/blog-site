@@ -1,7 +1,14 @@
-import 'tailwindcss/tailwind.css'
+import "tailwindcss/tailwind.css";
+import SideMenu from "../components/menu";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <div>
+      <SideMenu>
+        <Component {...pageProps} />
+      </SideMenu>
+    </div>
+  );
 }
 
-export default MyApp
+export default MyApp;

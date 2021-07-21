@@ -1,4 +1,8 @@
-export default function Example() {
+export default function Example({ setLogin }) {
+  const login = () => {
+    setLogin(true);
+  };
+
   return (
     <div className="min-h-screen bg-white flex">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -53,6 +57,7 @@ export default function Example() {
                 <div>
                   <button
                     type="submit"
+                    onClick={login}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Sign in

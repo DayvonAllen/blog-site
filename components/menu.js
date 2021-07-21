@@ -11,9 +11,7 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import {
-  CashIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
   SearchIcon,
 } from "@heroicons/react/solid";
 
@@ -31,8 +29,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example({ children }) {
+function Menu({isLoggedIn, setLogin}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  console.log(isLoggedIn)
+
+  const logout = () => {
+    setLogin(false);
+  };
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
@@ -287,6 +291,7 @@ export default function Example({ children }) {
                           {({ active }) => (
                             <a
                               href="#"
+                              onClick={logout}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"
@@ -315,3 +320,5 @@ export default function Example({ children }) {
     </div>
   );
 }
+
+export default Menu;

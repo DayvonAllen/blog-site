@@ -2,6 +2,7 @@ import "tailwindcss/tailwind.css";
 import SideMenu from "../components/sideMenu";
 import Login from "../components/login";
 import { useState } from "react";
+import buildClient from "./api/buildClient";
 
 function AppComponent({ Component, pageProps }) {
   const [isLoggedIn, setLogin] = useState(false);

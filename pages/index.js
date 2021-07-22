@@ -1,4 +1,3 @@
-import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/react/solid'
 
 const posts = [
   {
@@ -71,7 +70,7 @@ const posts = [
     category: { name: 'New', href: '#', color: 'bg-green-100 text-green-800' },
     description:
       'Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.',
-    date: 'Mar 10, 2020',
+    date: '',
     datetime: '2020-03-10',
     author: {
       name: 'Dessie Ryan',

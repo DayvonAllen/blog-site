@@ -167,7 +167,7 @@ const posts = [
     category: { name: "Case Study", href: "#" },
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint harum rerum voluptatem quo recusandae magni placeat saepe molestiae, sed excepturi cumque corporis perferendis hic.",
-    date: "Feb 12, 2020",
+    date: "３月 １０日　２０２１年",
     datetime: "2020-02-12",
     imageUrl:
       "https://images.unsplash.com/photo-1492724441997-5dc865305da7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80",

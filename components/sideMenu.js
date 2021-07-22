@@ -29,10 +29,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Menu({isLoggedIn, setLogin}) {
+function SideMenu({setLogin, children}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  console.log(isLoggedIn)
 
   const logout = () => {
     setLogin(false);
@@ -321,4 +319,10 @@ function Menu({isLoggedIn, setLogin}) {
   );
 }
 
-export default Menu;
+SideMenu.getInitialProps = async (appContext, setLogin) => {
+  return {
+    setLogin: setLogin
+  };
+};
+
+export default SideMenu;

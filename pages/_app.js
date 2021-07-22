@@ -1,18 +1,16 @@
 import "tailwindcss/tailwind.css";
-import SideMenu from "../components/menu";
+import SideMenu from "../components/sideMenu";
 import Login from "../components/login";
 import { useState } from "react";
 
-function MyApp({ Component, pageProps }) {
+function AppComponent({ Component, pageProps }) {
   const [isLoggedIn, setLogin] = useState(false);
-
-  console.log(isLoggedIn)
 
   return (
     <div>
       {!isLoggedIn && <Login setLogin={setLogin} />}
       {isLoggedIn && (
-        <SideMenu setLogin={setLogin} isLoggedIn={isLoggedIn} >
+        <SideMenu setLogin={setLogin} isLoggedIn={isLoggedIn}>
           <Component {...pageProps} />
         </SideMenu>
       )}
@@ -20,4 +18,20 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+AppComponent.getInitialProps = async (appContext) => {
+  const client = buildClient(appContext.ctx);
+
+  let pageProps = {};
+
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client
+    );
+  }
+  return {
+    pageProps,
+  };
+};
+
+export default AppComponent;

@@ -7,13 +7,14 @@ const buildClient = ({ req }) => {
   if (typeof window === "undefined") {
     // return a preconfigured version of axios
     return axios.create({
-      baseURL: "http://admin-srv/"
+      baseURL: "http://localhost",
+      headers: req?.headers
     });
   }
   // we are on the browser
   else {
     return axios.create({
-      baseURL: "/"
+      baseURL: ""
     });
   }
 };

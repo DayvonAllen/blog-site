@@ -1,41 +1,32 @@
 import "tailwindcss/tailwind.css";
-import SideMenu from "../components/sideMenu";
-import Login from "./auth/login";
 import { useState } from "react";
-import buildClient from "./api/buildClient";
-import axios from "axios";
-import Router from "next/router";
+import AppContainer from "../components/appContainer";
 
 function AppComponent({ Component, pageProps }) {
   const [status, setStatus] = useState(0)
 
   return (
     <div>
-        <SideMenu status={status} pageProps={pageProps}>
-          <Component setStatus={setStatus}{...pageProps} />
-        </SideMenu>
+        <AppContainer {...pageProps}>
+        <Component setStatus={setStatus} {...pageProps} />
+        </AppContainer>
     </div>
   );
 }
 
+// Requests from getInitialProps could be executed from the client or the server but requests
+// from the component are always issued by the bro
 AppComponent.getInitialProps = async (appContext) => {
-  // const data = await axios
-  //   .get("http://admin-srv/control/posts", { withCredentials: true })
-  //   .catch((err) => console.log("err"));
-
-  const data = {}
-
   let pageProps = {};
 
   if (appContext.Component.getInitialProps) {
     pageProps = await appContext.Component.getInitialProps(
-      appContext.ctx,
-      data
+      appContext,
     );
   }
 
   return {
-    pageProps,
+    pageProps
   };
 };
 

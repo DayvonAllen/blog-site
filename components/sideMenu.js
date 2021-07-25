@@ -28,17 +28,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SideMenu({ children, status, pageProps }) {
+function SideMenu({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  console.log(pageProps)
 
   const logout = async () => {
     await axios
-      .get("http://admin-srv/control/checkin", { withCredentials: true })
+      .get("/api/control/checkin/", { withCredentials: true })
       .catch((err) => {
-        Router.push("/auth/login");
+        Router.push("/");
       });
-    return Router.push("/auth/login");
+    return Router.push("/");
   };
 
   const mainContent = () => {
@@ -329,12 +328,5 @@ function SideMenu({ children, status, pageProps }) {
     </div>
   )
 }
-
-SideMenu.getInitialProps = async (appContext, setLogin) => {
-  return {
-    setLogin: setLogin,
-    appContext
-  };
-};
 
 export default SideMenu;

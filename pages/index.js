@@ -195,17 +195,17 @@ function Home() {
 }
 
 
-export async function getServerSideProps(context){
-  const {params, req, res} = context;
+// export async function getServerSideProps(context){
+//   const {params, req, res} = context;
 
-  // const data = await axios.get("http://admin-srv/control/posts", {withCredentials: true}).catch(err =>  { return {status: 401}})
+//   // const data = await axios.get("http://admin-srv/control/posts", {withCredentials: true}).catch(err =>  { return {status: 401}})
 
-  //  return {
-  //     props:{
-  //         data
-  //     },       
-  // }
+//   //  return {
+//   //     props:{
+//   //         data
+//   //     },       
+//   // }
 
-}
+// }
 
 export default Home

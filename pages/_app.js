@@ -1,35 +1,37 @@
 import "tailwindcss/tailwind.css";
 import SideMenu from "../components/sideMenu";
-import Login from "../components/login";
+import Login from "./auth/login";
 import { useState } from "react";
 import buildClient from "./api/buildClient";
+import axios from "axios";
+import Router from "next/router";
 
 function AppComponent({ Component, pageProps }) {
-  const [isLoggedIn, setLogin] = useState(false);
+  const [status, setStatus] = useState(0)
 
   return (
     <div>
-      {!isLoggedIn && <Login setLogin={setLogin} />}
-      {isLoggedIn && (
-        <SideMenu setLogin={setLogin} isLoggedIn={isLoggedIn}>
-          <Component {...pageProps} />
+        <SideMenu status={status} pageProps={pageProps}>
+          <Component setStatus={setStatus}{...pageProps} />
         </SideMenu>
-      )}
     </div>
   );
 }
 
 AppComponent.getInitialProps = async (appContext) => {
-  const client = buildClient(appContext.ctx);
+  const data = await axios
+    .get("http://localhost:8082/control/posts", { withCredentials: true })
+    .catch((err) => console.log("err"));
 
   let pageProps = {};
 
   if (appContext.Component.getInitialProps) {
     pageProps = await appContext.Component.getInitialProps(
       appContext.ctx,
-      client
+      data
     );
   }
+
   return {
     pageProps,
   };

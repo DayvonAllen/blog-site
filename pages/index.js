@@ -1,3 +1,5 @@
+import axios from "axios";
+import Router from "next/router";
 
 const posts = [
   {
@@ -103,7 +105,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+function Home({data}) {
+
+  console.log(data)
+  
+
   return (
     <div>
     <div className="bg-gray-50 pt-12 sm:pt-16">
@@ -190,3 +196,19 @@ export default function Example() {
     </div>
   );
 }
+
+
+export async function getServerSideProps(context){
+  const {params, req, res} = context;
+
+  const data = await axios.get("http://localhost:8082/control/posts", {withCredentials: true}).catch(err =>  { return {status: 401}})
+
+   return {
+      props:{
+          data
+      },       
+  }
+
+}
+
+export default Home

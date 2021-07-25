@@ -10,10 +10,9 @@ import {
   UserGroupIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import {
-  ChevronDownIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
+import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
+import axios from "axios";
+import Router from "next/router";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -29,11 +28,29 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SideMenu({setLogin, children}) {
+function SideMenu({ children, status, pageProps }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  console.log(pageProps)
 
-  const logout = () => {
-    setLogin(false);
+  const logout = async () => {
+    await axios
+      .get("http://localhost:8082/control/checkin", { withCredentials: true })
+      .catch((err) => {
+        Router.push("/auth/login");
+      });
+    return Router.push("/auth/login");
+  };
+
+  const mainContent = () => {
+    return (
+      <main className="flex-1 relative pb-8 z-0 overflow-y-auto">
+        <div className="mt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </div>
+      </main>
+    );
   };
 
   return (
@@ -307,21 +324,16 @@ function SideMenu({setLogin, children}) {
             </div>
           </div>
         </div>
-        <main className="flex-1 relative pb-8 z-0 overflow-y-auto">
-          <div className="mt-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              {children}
-            </div>
-          </div>
-        </main>
+        {mainContent()}
       </div>
     </div>
-  );
+  )
 }
 
 SideMenu.getInitialProps = async (appContext, setLogin) => {
   return {
-    setLogin: setLogin
+    setLogin: setLogin,
+    appContext
   };
 };
 

@@ -286,7 +286,7 @@ function Post({data}) {
 export async function getServerSideProps(context){
   const {params, req, res} = context;
 
-  const data = await axios.get("http://localhost:8082/control/posts", {withCredentials: true}).catch(err => { return {status: 401}})
+  const data = await axios.get("admin-srv/control/posts", {withCredentials: true}).catch(err => { return {status: 401}})
 
    return {
       props:{

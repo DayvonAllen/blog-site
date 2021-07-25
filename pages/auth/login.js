@@ -10,7 +10,7 @@ export default function Login({setStatus}) {
   
   const onSubmit = async (event) => {
     event.preventDefault();
-    const data = await axios.post("http://localhost:8082/control/checkin", {email: username, password}, {withCredentials: true}).catch(err => {setErrors("Incorrect Details")})
+    const data = await axios.post("admin-srv/control/checkin", {email: username, password}, {withCredentials: true}).catch(err => {setErrors("Incorrect Details")})
 
     if(data?.status === 200) {
       return Router.push("/")

@@ -7,7 +7,7 @@ const doRequest = ({ url, method, body, onSuccess }) => {
   const doRequest = async (props = {}) => {
     try {
       setErrors(null);
-      const response = await axios["post"]("admin-srv/control/checkin", {
+      const response = await axios["post"]("http://admin-srv/control/checkin", {
         withCredentials: true,
         ...body,
         ...props,

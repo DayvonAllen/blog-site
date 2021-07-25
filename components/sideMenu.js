@@ -34,7 +34,7 @@ function SideMenu({ children, status, pageProps }) {
 
   const logout = async () => {
     await axios
-      .get("admin-srv/control/checkin", { withCredentials: true })
+      .get("http://admin-srv/control/checkin", { withCredentials: true })
       .catch((err) => {
         Router.push("/auth/login");
       });

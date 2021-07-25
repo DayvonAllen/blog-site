@@ -105,10 +105,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-function Home({data}) {
-
-  console.log(data)
-  
+function Home() {  
 
   return (
     <div>
@@ -201,13 +198,13 @@ function Home({data}) {
 export async function getServerSideProps(context){
   const {params, req, res} = context;
 
-  const data = await axios.get("admin-srv/control/posts", {withCredentials: true}).catch(err =>  { return {status: 401}})
+  // const data = await axios.get("http://admin-srv/control/posts", {withCredentials: true}).catch(err =>  { return {status: 401}})
 
-   return {
-      props:{
-          data
-      },       
-  }
+  //  return {
+  //     props:{
+  //         data
+  //     },       
+  // }
 
 }
 

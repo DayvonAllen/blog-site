@@ -185,19 +185,19 @@ const posts = [
   },
 ];
 
-function Post({data}) {
+function Post() {
 
   const router = useRouter()
 
-  useEffect(() => {
-    if(data?.status === 401) {
-      console.log("failed")
-    }
-    if(data?.status !== 200) {
-      console.log(data.status)
-      router.push("/auth/login")
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if(data?.status === 401) {
+  //     console.log("failed")
+  //   }
+  //   if(data?.status !== 200) {
+  //     console.log(data.status)
+  //     router.push("/auth/login")
+  //   }
+  // }, [data])
   return (
     <div>
       <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
@@ -286,13 +286,13 @@ function Post({data}) {
 export async function getServerSideProps(context){
   const {params, req, res} = context;
 
-  const data = await axios.get("admin-srv/control/posts", {withCredentials: true}).catch(err => { return {status: 401}})
+  // const data = await axios.get("http://admin-srv/control/posts", {withCredentials: true}).catch(err => { return {status: 401}})
 
-   return {
-      props:{
-          data
-      },       
-  }
+  //  return {
+  //     props:{
+  //         data
+  //     },       
+  // }
 
 }
 

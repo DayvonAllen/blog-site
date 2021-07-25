@@ -19,9 +19,11 @@ function AppComponent({ Component, pageProps }) {
 }
 
 AppComponent.getInitialProps = async (appContext) => {
-  const data = await axios
-    .get("admin-srv/control/posts", { withCredentials: true })
-    .catch((err) => console.log("err"));
+  // const data = await axios
+  //   .get("http://admin-srv/control/posts", { withCredentials: true })
+  //   .catch((err) => console.log("err"));
+
+  const data = {}
 
   let pageProps = {};
 

@@ -1,14 +1,14 @@
 import "tailwindcss/tailwind.css";
 import { useState } from "react";
 import AppContainer from "../components/appContainer";
+import buildClient from "../api/buildClient";
 
 function AppComponent({ Component, pageProps }) {
-  const [status, setStatus] = useState(0)
-
+  console.log(pageProps)
   return (
     <div>
-        <AppContainer {...pageProps}>
-        <Component setStatus={setStatus} {...pageProps} />
+        <AppContainer loggedIn={pageProps?.loggedIn}>
+        <Component {...pageProps} />
         </AppContainer>
     </div>
   );
@@ -16,12 +16,13 @@ function AppComponent({ Component, pageProps }) {
 
 // Requests from getInitialProps could be executed from the client or the server but requests
 // from the component are always issued by the bro
-AppComponent.getInitialProps = async (appContext) => {
+AppComponent.getInitialProps = async (context) => {
   let pageProps = {};
 
-  if (appContext.Component.getInitialProps) {
-    pageProps = await appContext.Component.getInitialProps(
-      appContext,
+
+  if (context.Component.getInitialProps) {
+    pageProps = await context.Component.getInitialProps(
+      context
     );
   }
 

@@ -2,23 +2,15 @@ import { useEffect, useState } from "react";
 import SideMenu from "./sideMenu";
 import { useRouter } from "next/router";
 
-function AppContainer({ children }) {
-  const [status, setStatus] = useState(0);
-
+function AppContainer({ children, loggedIn }) {
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(router);
-  }, []);
-
-  const pageProps = {};
 
   return (
     <div>
       {router.pathname === "/" ? (
         children
       ) : (
-        <SideMenu status={status} pageProps={pageProps}>
+        <SideMenu loggedIn={loggedIn}>
           {children}
         </SideMenu>
       )}
@@ -27,11 +19,13 @@ function AppContainer({ children }) {
 }
 
 // This function always runs first
-export async function getStaticProps(context) {
-
-  return {
-    props: {},
-  };
-}
+AppContainer.getInitialProps= async function({ req }) {
+    const loggedIn = req?.headers?.cookie || false
+    return {
+      props: {
+        loggedIn,
+      },
+    };
+  }
 
 export default AppContainer;

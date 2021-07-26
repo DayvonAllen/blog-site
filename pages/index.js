@@ -17,7 +17,6 @@ export default function Login() {
       password,
     },
     onSuccess: () => {
-      console.log("==========================================================================================")
       Router.push("/home")
     }
   });

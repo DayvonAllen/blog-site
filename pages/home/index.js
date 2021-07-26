@@ -1,7 +1,6 @@
 import axios from "axios";
-import Router from "next/router";
-import { useEffect } from "react";
-import buildClient from "../api/buildClient";
+import router from "next/router";
+import { useEffect, useState } from "react";
 
 const posts = [
   {
@@ -106,11 +105,21 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Home({ data }) {
-  useEffect(() => {
-    console.log(data);
+function Home({ loggedIn }) {
+  const [data, setData] = useState(null);
+
+  useEffect(async () => {
+    if (!loggedIn) {
+      router.push("/");
+    }
+    const data = await axios
+      .get("/api/control/posts", { useCredentials: true })
+      .catch((err) => router.push("/"));
+
+    setData(data);
   }, []);
-  return (
+
+  return loggedIn ? (
     <div>
       <div className="bg-gray-50 pt-12 sm:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -214,18 +223,16 @@ function Home({ data }) {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 }
 
-Home.getInitialProps = async (context) => {
-  console.log(context)
-  // const { data } = await buildClient(context).get("/api/control/posts", {
-  //   withCredentials: true,
-  // });
-
-  // console.log(data)
-
-  // return data;
-};
+export async function getServerSideProps({ req }) {
+  const loggedIn = req?.headers?.cookie || false
+  return {
+    props: {
+      loggedIn,
+    },
+  };
+}
 
 export default Home;

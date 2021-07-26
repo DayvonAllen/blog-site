@@ -1,10 +1,7 @@
 import "tailwindcss/tailwind.css";
-import { useState } from "react";
 import AppContainer from "../components/appContainer";
-import buildClient from "../api/buildClient";
 
 function AppComponent({ Component, pageProps }) {
-  console.log(pageProps)
   return (
     <div>
         <AppContainer loggedIn={pageProps?.loggedIn}>
@@ -18,7 +15,6 @@ function AppComponent({ Component, pageProps }) {
 // from the component are always issued by the bro
 AppComponent.getInitialProps = async (context) => {
   let pageProps = {};
-
 
   if (context.Component.getInitialProps) {
     pageProps = await context.Component.getInitialProps(

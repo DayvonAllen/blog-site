@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router'
-import axios from "axios"
-import { useEffect } from 'react';
 
 const posts = [
   {
@@ -282,18 +280,5 @@ function Post() {
     </div>
   );
 }
-
-// export async function getServerSideProps(context){
-//   const {params, req, res} = context;
-
-//   // const data = await axios.get("http://admin-srv/control/posts", {withCredentials: true}).catch(err => { return {status: 401}})
-
-//   //  return {
-//   //     props:{
-//   //         data
-//   //     },       
-//   // }
-
-// }
 
 export default Post

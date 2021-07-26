@@ -28,7 +28,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SideMenu({ children, loggedIn, context }) {
+function SideMenu({ children, loggedIn }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -42,7 +42,6 @@ function SideMenu({ children, loggedIn, context }) {
   };
 
   useEffect(() => {
-    console.log(context)
     if(loggedIn) {
       setShow(true)
     } else {

@@ -1,3 +1,4 @@
+import axios from "axios";
 import "tailwindcss/tailwind.css";
 import AppContainer from "../components/appContainer";
 

@@ -105,21 +105,25 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Home({ loggedIn }) {
-  const [data, setData] = useState(null);
+function Home() {
+  const [postArr, setPostArr] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
-    if (!loggedIn) {
-      router.push("/");
-    }
-    const data = await axios
-      .get("/api/control/posts", { useCredentials: true })
-      .catch((err) => router.push("/"));
+    try {
+      setLoading(true);
+      const data = await axios.get("/api/control/posts?new=true", {
+        withCredentials: true,
+      });
 
-    setData(data);
+      setPostArr(data?.data?.data?.posts);
+      setLoading(false);
+    } catch (e) {}
   }, []);
 
-  return loggedIn ? (
+  useEffect(async () => {}, [loading]);
+
+  return !loading ? (
     <div>
       <div className="bg-gray-50 pt-12 sm:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,31 +177,31 @@ function Home({ loggedIn }) {
             </h2>
           </div>
           <div className="mt-12 grid gap-16 pt-12 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-12">
-            {posts.map((post) => (
+            {postArr.map((post) => (
               <div className="mt-6" key={post.title}>
                 <div>
-                  <a href={post.category.href} className="inline-block">
+                  <a href={post.mainImage} className="inline-block">
                     <span
                       className={classNames(
-                        post.category.color,
+                        "bg-green-100 text-green-800",
                         "inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium"
                       )}
                     >
-                      {post.category.name}
+                      {post.tag}
                     </span>
                   </a>
                 </div>
-                <a href={post.href} className="block mt-4">
+                <a href={post?.href} className="block mt-4">
                   <p className="text-xl font-semibold text-gray-900">
                     {post.title}
                   </p>
                   <p className="mt-3 text-base text-gray-500">
-                    {post.description}
+                    {post?.preview}
                   </p>
                 </a>
                 <div className="mt-6 flex items-center">
-                  <div className="flex-shrink-0">
-                    <a href={post.author.href}>
+                  {/* <div className="flex-shrink-0">
+                    <a href={post?.author}>
                       <span className="sr-only">{post.author.name}</span>
                       <img
                         className="h-10 w-10 rounded-full"
@@ -205,15 +209,15 @@ function Home({ loggedIn }) {
                         alt=""
                       />
                     </a>
-                  </div>
+                  </div> */}
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">
-                      <a href={post.author.href}>{post.author.name}</a>
-                    </p>
+                    {/* <p className="text-sm font-medium text-gray-900">
+                      <a href={post.author.href}>{post.author}</a>
+                    </p> */}
                     <div className="flex space-x-1 text-sm text-gray-500">
-                      <time dateTime={post.datetime}>{post.date}</time>
-                      <span aria-hidden="true">&middot;</span>
-                      <span>{post.readingTime} read</span>
+                      <time dateTime="2020-03-10">Mar 10, 2020</time>
+                      {/* <span aria-hidden="true">&middot;</span> */}
+                      {/* <span>{post.readingTime} read</span> */}
                     </div>
                   </div>
                 </div>
@@ -224,15 +228,6 @@ function Home({ loggedIn }) {
       </div>
     </div>
   ) : null;
-}
-
-export async function getServerSideProps({ req }) {
-  const loggedIn = req?.headers?.cookie || false
-  return {
-    props: {
-      loggedIn,
-    },
-  };
 }
 
 export default Home;

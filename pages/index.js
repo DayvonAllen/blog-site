@@ -1,29 +1,21 @@
 import { useState } from "react";
 import Router from "next/router";
 // custom hook
-import useRequest from "../hooks/doRequest"
+import axios from "axios";
 
 // Login stuff
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  
-  const { doRequest, errors } = useRequest({
-    url: "/api/control/checkin",
-    method: "post",
-    body: {
-      username,
-      password,
-    },
-    onSuccess: () => {
-      Router.push("/home")
-    }
-  });
-
   const onSubmit = async (event) => {
     event.preventDefault();
-    doRequest();
+    try {
+      await axios.post("/api/control/checkin", {username, password})
+      Router.push("/home")
+    } catch(e) {
+      console.log(e)
+    }
   };
 
   return (
@@ -78,7 +70,6 @@ export default function Login() {
                     />
                   </div>
                 </div>
-                {errors}
                 <div>
                   <button
                     type="submit"

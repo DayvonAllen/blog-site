@@ -177,7 +177,7 @@ function Home() {
             </h2>
           </div>
           <div className="mt-12 grid gap-16 pt-12 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-12">
-            {postArr.map((post) => (
+            {postArr?.map((post) => (
               <div className="mt-6" key={post.title}>
                 <div>
                   <a href={post.mainImage} className="inline-block">

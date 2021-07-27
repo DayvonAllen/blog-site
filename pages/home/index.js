@@ -230,4 +230,15 @@ function Home() {
   ) : null;
 }
 
+export async function getStaticProps(context) { 
+
+  console.log(context)
+
+  return {
+      props:{},
+      // tells next.js for every incoming request to a page, it should be regenerated, unless it was last regenerated less than 10 seconds ago.
+      // revalidate: 10,
+  }
+}
+
 export default Home;

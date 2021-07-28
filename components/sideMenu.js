@@ -16,8 +16,6 @@ import axios from "axios";
 import Router from "next/router";
 import { useRouter } from "next/router";
 
-
-
 const secondaryNavigation = [{ name: "Settings", href: "#", icon: CogIcon }];
 
 function classNames(...classes) {
@@ -28,7 +26,6 @@ function SideMenu({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
-
   const logout = async () => {
     await axios
       .get("/api/control/checkin/", { withCredentials: true })
@@ -38,16 +35,24 @@ function SideMenu({ children }) {
     Router.push("/");
   };
 
-  console.log(router.pathname)
   const navigation = [
-    { name: "Home", href: "/home", icon: HomeIcon, current: router.pathname === "/home" },
-    { name: "Create Post", href: "/posts/create", icon: ClockIcon, current:  router.pathname === "/posts/create" },
-    { name: "View Posts", href: "#", icon: ScaleIcon, current: false },
+    {
+      name: "Home",
+      href: "/home",
+      icon: HomeIcon,
+      current: router.pathname === "/home",
+    },
+    {
+      name: "Create Post",
+      href: "/posts/create",
+      icon: ClockIcon,
+      current: router.pathname === "/posts/create",
+    },
+    { name: "View Posts", href: "/posts", icon: ScaleIcon, current:  router.pathname === "/posts" },
     { name: "Edit Posts", href: "#", icon: ScaleIcon, current: false },
     { name: "Create Tag", href: "#", icon: CreditCardIcon, current: false },
     { name: "View Tags", href: "#", icon: UserGroupIcon, current: false },
   ];
-  
 
   const mainContent = () => {
     return (
@@ -187,7 +192,7 @@ function SideMenu({ children }) {
             >
               <div className="px-2 space-y-1">
                 {navigation.map((item) => (
-                  <Link href={item.href}>
+                  <Link key={item.name} href={item.href}>
                     <a
                       key={item.name}
                       className={classNames(
@@ -210,7 +215,7 @@ function SideMenu({ children }) {
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1">
                   {secondaryNavigation.map((item) => (
-                    <Link href={item.href}>
+                    <Link key={item.name} href={item.href}>
                       <a
                         key={item.name}
                         className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"

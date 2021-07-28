@@ -1,129 +1,23 @@
-import axios from "axios";
-import router from "next/router";
-import { useEffect, useState } from "react";
-
-const posts = [
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "New", href: "#", color: "bg-green-100 text-green-800" },
-    description:
-      "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-];
+import { useState } from "react";
+import buildClient from "../../api/buildClient";
+import moment from "moment";
+import localization from "moment/locale/ja";
+import Link from "next/link";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Home() {
-  const [postArr, setPostArr] = useState([]);
-  const [loading, setLoading] = useState(false);
+function Home({ posts, serverError }) {
+  const [postArr, setPostArr] = useState(posts);
 
-  useEffect(async () => {
-    try {
-      setLoading(true);
-      const data = await axios.get("/api/control/posts?new=true", {
-        withCredentials: true,
-      });
+  if (serverError) {
+    return <p>Server Error...</p>;
+  }
 
-      setPostArr(data?.data?.data?.posts);
-      setLoading(false);
-    } catch (e) {}
-  }, []);
+  moment.updateLocale("ja", localization);
 
-  useEffect(async () => {}, [loading]);
-
-  return !loading ? (
+  return (
     <div>
       <div className="bg-gray-50 pt-12 sm:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -215,9 +109,15 @@ function Home() {
                       <a href={post.author.href}>{post.author}</a>
                     </p> */}
                     <div className="flex space-x-1 text-sm text-gray-500">
-                      <time dateTime="2020-03-10">Mar 10, 2020</time>
-                      {/* <span aria-hidden="true">&middot;</span> */}
-                      {/* <span>{post.readingTime} read</span> */}
+                      <time dateTime={moment(post.createdAt).format("LL")}>
+                        {moment(post.createdAt).format("LL")}
+                      </time>
+                      <span aria-hidden="true">&middot;</span>
+                      <Link key={post.id} href={`/posts/${post?.id}`}>
+                        <a>
+                          <span>{post.readingTime} Read More</span>
+                        </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -227,18 +127,43 @@ function Home() {
         </div>
       </div>
     </div>
-  ) : null;
+  );
 }
 
-export async function getStaticProps(context) { 
+export async function getServerSideProps(context) {
+  let serverError = false;
+  let unAuthenticated = false;
+  let posts = [];
 
-  console.log(context)
+  const res = await buildClient(context)
+    .get(`http://admin-srv/control/posts`, { withCredentials: true })
+    .catch((err) => {
+      if (err?.response?.status === 401) {
+        unAuthenticated = true;
+      } else {
+        serverError = true;
+      }
+    });
+
+  if (unAuthenticated) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
+
+  if (!serverError) {
+    const { data } = res;
+    posts = data?.data?.posts || [];
+  }
 
   return {
-      props:{},
-      // tells next.js for every incoming request to a page, it should be regenerated, unless it was last regenerated less than 10 seconds ago.
-      // revalidate: 10,
-  }
+    props: {
+      posts,
+      serverError,
+    },
+  };
 }
 
 export default Home;

@@ -108,12 +108,39 @@ export default function Create() {
   );
 }
 
-export async function getStaticProps(context) {
-  console.log(context);
+export async function getServerSideProps(context) {
+  // let serverError = false;
+  // let unAuthenticated = false;
+  // let posts = [];
+
+  // const res = await buildClient(context)
+  //   .get(`http://admin-srv/control/posts`, { withCredentials: true })
+  //   .catch((err) => {
+  //     if (err?.response?.status === 401) {
+  //       unAuthenticated = true;
+  //     } else {
+  //       serverError = true;
+  //     }
+  //   });
+
+  // if (unAuthenticated) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //     },
+  //   };
+  // }
+
+  // if (!serverError) {
+  //   const { data } = res;
+  //   posts = data?.data?.posts || [];
+  // }
 
   return {
-    props: {},
-    // tells next.js for every incoming request to a page, it should be regenerated, unless it was last regenerated less than 10 seconds ago.
-    // revalidate: 10,
+    props: {
+      // posts,
+      // serverError,
+    },
   };
 }
+

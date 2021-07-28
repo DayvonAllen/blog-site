@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Router from "next/router";
+import buildClient from "../api/buildClient";
 // custom hook
 import axios from "axios";
 
@@ -93,4 +94,40 @@ export default function Login() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  // let serverError = false;
+  // let unAuthenticated = false;
+  // let posts = [];
+
+  // const res = await buildClient(context)
+  //   .get(`http://admin-srv/control/posts`, { withCredentials: true })
+  //   .catch((err) => {
+  //     if (err?.response?.status === 401) {
+  //       unAuthenticated = true;
+  //     } else {
+  //       serverError = true;
+  //     }
+  //   });
+
+  // if (unAuthenticated) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //     },
+  //   };
+  // }
+
+  // if (!serverError) {
+  //   const { data } = res;
+  //   posts = data?.data?.posts || [];
+  // }
+
+  return {
+    props: {
+      // posts,
+      // serverError,
+    },
+  };
 }

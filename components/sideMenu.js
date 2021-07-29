@@ -22,18 +22,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SideMenu({ children }) {
+function SideMenu({ children, logout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-
-  const logout = async () => {
-    await axios
-      .get("/api/control/checkin/", { withCredentials: true })
-      .catch((err) => {
-        Router.push("/");
-      });
-    Router.push("/");
-  };
 
   const navigation = [
     {
@@ -49,9 +40,9 @@ function SideMenu({ children }) {
       current: router.pathname === "/posts/create",
     },
     { name: "View Posts", href: "/posts", icon: ScaleIcon, current:  router.pathname === "/posts" },
-    { name: "Edit Posts", href: "#", icon: ScaleIcon, current: false },
-    { name: "Create Tag", href: "#", icon: CreditCardIcon, current: false },
-    { name: "View Tags", href: "#", icon: UserGroupIcon, current: false },
+    { name: "Edit Posts", href: "", icon: ScaleIcon, current: false },
+    { name: "Create Tag", href: "", icon: CreditCardIcon, current: false },
+    { name: "View Tags", href: "", icon: UserGroupIcon, current: false },
   ];
 
   const mainContent = () => {
@@ -130,8 +121,6 @@ function SideMenu({ children }) {
                 <div className="px-2 space-y-1">
                   {navigation.map((item) => (
                     <a
-                      key={item.name}
-                      href={item.href}
                       className={classNames(
                         item.current
                           ? "bg-cyan-800 text-white"
@@ -192,7 +181,7 @@ function SideMenu({ children }) {
             >
               <div className="px-2 space-y-1">
                 {navigation.map((item) => (
-                  <Link key={item.name} href={item.href}>
+                  <Link key={item.name} href={item.href} replace>
                     <a
                       key={item.name}
                       className={classNames(
@@ -215,7 +204,7 @@ function SideMenu({ children }) {
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1">
                   {secondaryNavigation.map((item) => (
-                    <Link key={item.name} href={item.href}>
+                    <Link key={item.name} href={item.href} replace>
                       <a
                         key={item.name}
                         className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
@@ -321,7 +310,7 @@ function SideMenu({ children }) {
                           {({ active }) => (
                             <a
                               href="#"
-                              onClick={logout}
+                              onClick={() => logout()}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700"

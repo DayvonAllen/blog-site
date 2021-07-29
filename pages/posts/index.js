@@ -8,7 +8,7 @@ function Posts({ posts, serverError }) {
   const [postArr, setPostArr] = useState(posts);
 
   if (serverError) {
-    return <p>Server Error...</p>;
+    return <p>Loading...</p>;
   }
 
   moment.updateLocale("ja", localization);
@@ -32,42 +32,44 @@ function Posts({ posts, serverError }) {
             {postArr.map((post) => (
               <Link key={post.id} href={`/posts/${post?.id}`}>
                 <a>
-                <div
-                  key={post.id}
-                  className="flex flex-col rounded-lg shadow-lg overflow-hidden"
-                >
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-48 w-full object-cover"
-                      // src={post.imageUrl}
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                  </div>
-                  <div className="flex-1 bg-white p-6 flex flex-col justify-between">
-                    <div className="flex-1">
-                      <a href={post.href} className="block mt-2">
-                        <p className="text-xl font-semibold text-gray-900">
-                          {post.title}
-                        </p>
-                        <p className="mt-3 text-base text-gray-500">
-                          {post.preview}
-                        </p>
-                      </a>
+                  <div
+                    key={post.id}
+                    className="flex flex-col rounded-lg shadow-lg overflow-hidden"
+                  >
+                    <div className="flex-shrink-0">
+                      <img
+                        className="h-48 w-full object-cover"
+                        // src={post.imageUrl}
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                      />
                     </div>
-                    <div className="mt-6 flex items-center">
-                      <div className="ml-3">
-                        <div className="flex space-x-1 text-sm text-gray-500">
-                          <time dateTime={moment(post.createdAt).format("LL")}>
-                            {moment(post.createdAt).format("LL")}
-                          </time>
-                          <span aria-hidden="true">&middot;</span>
-                          <span>{post.readingTime} Read More</span>
+                    <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+                      <div className="flex-1">
+                        <a href={post.href} className="block mt-2">
+                          <p className="text-xl font-semibold text-gray-900">
+                            {post.title}
+                          </p>
+                          <p className="mt-3 text-base text-gray-500">
+                            {post.preview}
+                          </p>
+                        </a>
+                      </div>
+                      <div className="mt-6 flex items-center">
+                        <div className="ml-3">
+                          <div className="flex space-x-1 text-sm text-gray-500">
+                            <time
+                              dateTime={moment(post.createdAt).format("LL")}
+                            >
+                              {moment(post.createdAt).format("LL")}
+                            </time>
+                            <span aria-hidden="true">&middot;</span>
+                            <span>{post.readingTime} Read More</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
                 </a>
               </Link>
             ))}
@@ -105,13 +107,13 @@ function Posts({ posts, serverError }) {
   );
 }
 
-export async function getServerSideProps(context) {
+Posts.getInitialProps = async ({ ctx }) => {
   let serverError = false;
   let unAuthenticated = false;
   let posts = [];
 
-  const res = await buildClient(context)
-    .get(`http://admin-srv/control/posts`, { withCredentials: true })
+  const res = await buildClient(ctx)
+    .get(`https://admin-srv/control/posts`, { withCredentials: true })
     .catch((err) => {
       if (err?.response?.status === 401) {
         unAuthenticated = true;
@@ -121,11 +123,11 @@ export async function getServerSideProps(context) {
     });
 
   if (unAuthenticated) {
-    return {
-      redirect: {
-        destination: "/",
-      },
-    };
+    if (ctx?.res) {
+      ctx.res.writeHead(302, { Location: "/" });
+      ctx.res.end();
+    }
+    return {};
   }
 
   if (!serverError) {
@@ -134,11 +136,9 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {
-      posts,
-      serverError,
-    },
+    posts,
+    serverError,
   };
-}
+};
 
 export default Posts;

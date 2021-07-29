@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import buildClient from "../../api/buildClient";
 import moment from "moment";
 import localization from "moment/locale/ja";
@@ -12,7 +12,7 @@ function Home({ posts, serverError }) {
   const [postArr, setPostArr] = useState(posts);
 
   if (serverError) {
-    return <p>Server Error...</p>;
+    return <p>Loading...</p>;
   }
 
   moment.updateLocale("ja", localization);
@@ -130,40 +130,49 @@ function Home({ posts, serverError }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  let serverError = false;
-  let unAuthenticated = false;
-  let posts = [];
+// export async function getStaticProps() {
+//   let serverError = false;
+//   let unAuthenticated = false;
+//   let posts = [];
 
-  const res = await buildClient(context)
-    .get(`http://admin-srv/control/posts`, { withCredentials: true })
-    .catch((err) => {
-      if (err?.response?.status === 401) {
-        unAuthenticated = true;
-      } else {
-        serverError = true;
-      }
-    });
+//   // const res = await buildClient()
+//   //   .get(`https://admin-srv/control/posts`, { withCredentials: true })
+//   //   .catch((err) => {
+//   //     if (err?.response?.status === 401) {
+//   //       unAuthenticated = true;
+//   //     } else {
+//   //       serverError = true;
+//   //     }
+//   //   });
 
-  if (unAuthenticated) {
-    return {
-      redirect: {
-        destination: "/",
-      },
-    };
-  }
+//   // if (unAuthenticated) {
+//   //   if (ctx.res) {
+//   //     ctx.res.writeHead(302, { Location: "/" });
+//   //     ctx.res.end();
+//   //   }
+//   //   return {};
+//   // }
 
-  if (!serverError) {
-    const { data } = res;
-    posts = data?.data?.posts || [];
-  }
+//   // if (!serverError) {
+//   //   posts = res?.data?.data?.posts || [];
+//   // }
+
+//   return {
+//     props: {
+//       posts,
+//       serverError,
+//     }
+//   };
+// };
+
+export async function getServerSideProps({req}) {
+  console.log(req?.headers?.cookie)
 
   return {
     props: {
-      posts,
-      serverError,
-    },
-  };
+      
+    }
+  }
 }
 
 export default Home;

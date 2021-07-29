@@ -1,37 +1,37 @@
-import { useState } from "react";
-import Router from "next/router";
-import buildClient from "../api/buildClient";
-// custom hook
-import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import AuthContext from "../context/AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Login stuff
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSubmit = async (event) => {
+  const { login, error } = useContext(AuthContext);
+
+  const router = useRouter();
+  const onSubmit = (event) => {
     event.preventDefault();
-    try {
-      await axios.post("/api/control/checkin", {username, password})
-      Router.push("/home")
-    } catch(e) {
-      console.log(e)
-    }
+    login({ username, password });
   };
+
+  useEffect(() => error && toast.error(error));
 
   return (
     <div className="min-h-screen bg-white flex">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
+          <ToastContainer />
             <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
           </div>
-
           <div className="mt-8">
             <div className="mt-6">
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={onSubmit}>
                 <div>
                   <label
                     htmlFor="email"
@@ -66,7 +66,6 @@ export default function Login() {
                       autoComplete="current-password"
                       required
                       onChange={(e) => setPassword(e.target.value)}
-                      onSubmit={onSubmit}
                       className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -96,7 +95,7 @@ export default function Login() {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps() {
   // let serverError = false;
   // let unAuthenticated = false;
   // let posts = [];

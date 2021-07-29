@@ -108,7 +108,7 @@ export default function Create() {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   // let serverError = false;
   // let unAuthenticated = false;
   // let posts = [];

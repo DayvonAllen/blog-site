@@ -34,7 +34,7 @@ export default async (req, res) => {
     } else {
       res
         .status(401)
-        .json({ message: "unauthenticated" })
+        .json({ message: "Wrong Username or Password" })
     }
   } else {
     res.setHeader('Allow', ['POST'])

@@ -165,14 +165,20 @@ function Home({ posts, serverError }) {
 //   };
 // };
 
-export async function getServerSideProps({req}) {
-  console.log(req?.headers?.cookie)
+
+export async function getServerSideProps(context) {
+  if(!context?.req?.headers?.cookie) {
+    return {
+      redirect: {
+      destination: "/",
+    }}
+  } 
 
   return {
     props: {
       
     }
-  }
-}
+  };
+};
 
 export default Home;

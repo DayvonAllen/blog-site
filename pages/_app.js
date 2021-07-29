@@ -13,19 +13,13 @@ function AppComponent({ Component, pageProps }) {
 
 // Requests from getInitialProps could be executed from the client or the server but requests
 // use getStaticProps or getServerSideProps instead(newer version)
-AppComponent.getInitialProps = async (context) => {
+export async function getServerSideProps(context) {
   let pageProps = {};
 
-  console.log(context)
-
-  if (context.Component.getInitialProps) {
-    pageProps = await context.Component.getInitialProps(
-      context
-    );
-  }
-
   return {
-    pageProps
+    props: {
+      pageProps
+    }
   };
 };
 

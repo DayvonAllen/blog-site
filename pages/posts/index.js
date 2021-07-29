@@ -106,38 +106,18 @@ function Posts({ posts, serverError }) {
     </div>
   );
 }
-
-Posts.getInitialProps = async ({ ctx }) => {
-  let serverError = false;
-  let unAuthenticated = false;
-  let posts = [];
-
-  const res = await buildClient(ctx)
-    .get(`https://admin-srv/control/posts`, { withCredentials: true })
-    .catch((err) => {
-      if (err?.response?.status === 401) {
-        unAuthenticated = true;
-      } else {
-        serverError = true;
-      }
-    });
-
-  if (unAuthenticated) {
-    if (ctx?.res) {
-      ctx.res.writeHead(302, { Location: "/" });
-      ctx.res.end();
-    }
-    return {};
-  }
-
-  if (!serverError) {
-    const { data } = res;
-    posts = data?.data?.posts || [];
-  }
+export async function getServerSideProps(context) {
+  if(!context?.req?.headers?.cookie) {
+    return {
+      redirect: {
+      destination: "/",
+    }}
+  } 
 
   return {
-    posts,
-    serverError,
+    props: {
+      
+    }
   };
 };
 

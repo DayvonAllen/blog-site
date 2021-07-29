@@ -11,7 +11,7 @@ function AppContainer({ children }) {
 
   return (
     <div>
-      {(router.pathname === "/" && (router.route === "/404" || !user)) ? (
+      {(router.pathname === "/" || router.route === "/404") ? (
         children
       ) : (
         <SideMenu logout={logout}>
@@ -21,6 +21,24 @@ function AppContainer({ children }) {
     </div>
   );
 }
+
+export async function getServerSideProps(context) {
+  let auth = false
+
+  if(context?.ctx?.req?.headers?.cookie) {
+    console.log("ran")
+    return {
+      redirect: {
+      destination: "/home",
+    }}
+  } 
+
+  return {
+    props: {
+      auth
+    }
+  };
+};
 
 
 export default AppContainer;

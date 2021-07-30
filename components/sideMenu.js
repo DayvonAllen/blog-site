@@ -10,10 +10,13 @@ import {
   ScaleIcon,
   UserGroupIcon,
   XIcon,
+  DocumentDuplicateIcon,
+  EyeIcon,
+  PencilIcon,
+  PencilAltIcon,
+  TagIcon
 } from "@heroicons/react/outline";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
-import axios from "axios";
-import Router from "next/router";
 import { useRouter } from "next/router";
 
 const secondaryNavigation = [{ name: "Settings", href: "#", icon: CogIcon }];
@@ -36,13 +39,13 @@ function SideMenu({ children, logout }) {
     {
       name: "Create Post",
       href: "/posts/create",
-      icon: ClockIcon,
+      icon: DocumentDuplicateIcon,
       current: router.pathname === "/posts/create",
     },
-    { name: "View Posts", href: "/posts", icon: ScaleIcon, current:  router.pathname === "/posts" },
-    { name: "Edit Posts", href: "", icon: ScaleIcon, current: false },
-    { name: "Create Tag", href: "", icon: CreditCardIcon, current: false },
-    { name: "View Tags", href: "", icon: UserGroupIcon, current: false },
+    { name: "View Posts", href: "/posts", icon: EyeIcon, current:  router.pathname === "/posts" },
+    { name: "Edit Posts", href: "", icon: PencilIcon, current: false },
+    { name: "Create Tag", href: "", icon: PencilAltIcon, current: false },
+    { name: "View Tags", href: "", icon: TagIcon, current: false },
   ];
 
   const mainContent = () => {

@@ -1,14 +1,6 @@
-import buildClient from "../../api/buildClient";
+import cookie from 'cookie'
 
-buildClient;
-
-function Post({ post, serverError }) {
-  if (serverError) {
-    return <p>Loading...</p>;
-  }
-  if (!post) {
-    return <p>Loading...</p>;
-  }
+function Post({ post }) {
 
   return (
     <div className="relative py-16 bg-white overflow-hidden">
@@ -142,41 +134,39 @@ function Post({ post, serverError }) {
   );
 }
 
-// we can get concrete param values from context(this comes from next.js)
-Post.getInitialProps = async () => {
-  let serverError = false;
-  let unAuthenticated = false;
-  let post = false;
+export async function getServerSideProps(context) {
+  if (!context?.req?.headers?.cookie) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
 
-  // const res = await buildClient(ctx)
-  //   .get(`https://admin-srv/control/posts/${ctx?.query}`, {
-  //     withCredentials: true,
-  //   })
-  //   .catch((err) => {
-  //     if (err?.response?.status === 401) {
-  //       unAuthenticated = true;
-  //     } else {
-  //       serverError = true;
-  //     }
-  //   });
+  const { token } = cookie.parse(context?.req?.headers?.cookie);
 
-  // if (unAuthenticated) {
-  //   if (ctx?.res) {
-  //     ctx.res.writeHead(302, { Location: "/" });
-  //     ctx.res.end();
-  //   }
-  //   return {};
-  // }
+  const res = await fetch(`http://admin-srv/control/posts/${context?.query?.id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `${token}`,
+    },
+  });
 
-  // if (!serverError) {
-  //   const { data } = res;
-  //   post = data?.data || false;
-  // }
+  if (res.status !== 200) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
+
+  const data = await res.json();
 
   return {
-    post,
-    serverError,
+    props: {
+      post: data?.data,
+    },
   };
-};
+}
 
 export default Post;

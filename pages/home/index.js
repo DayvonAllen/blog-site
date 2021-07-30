@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import buildClient from "../../api/buildClient";
+import { useState } from "react";
+import cookie from 'cookie'
 import moment from "moment";
 import localization from "moment/locale/ja";
 import Link from "next/link";
@@ -8,12 +8,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Home({ posts, serverError }) {
-  const [postArr, setPostArr] = useState(posts);
-
-  if (serverError) {
-    return <p>Loading...</p>;
-  }
+function Home({ postData }) {
+  const [postArr, setPostArr] = useState(postData?.posts);
 
   moment.updateLocale("ja", localization);
 
@@ -130,55 +126,40 @@ function Home({ posts, serverError }) {
   );
 }
 
-// export async function getStaticProps() {
-//   let serverError = false;
-//   let unAuthenticated = false;
-//   let posts = [];
-
-//   // const res = await buildClient()
-//   //   .get(`https://admin-srv/control/posts`, { withCredentials: true })
-//   //   .catch((err) => {
-//   //     if (err?.response?.status === 401) {
-//   //       unAuthenticated = true;
-//   //     } else {
-//   //       serverError = true;
-//   //     }
-//   //   });
-
-//   // if (unAuthenticated) {
-//   //   if (ctx.res) {
-//   //     ctx.res.writeHead(302, { Location: "/" });
-//   //     ctx.res.end();
-//   //   }
-//   //   return {};
-//   // }
-
-//   // if (!serverError) {
-//   //   posts = res?.data?.data?.posts || [];
-//   // }
-
-//   return {
-//     props: {
-//       posts,
-//       serverError,
-//     }
-//   };
-// };
-
 
 export async function getServerSideProps(context) {
-  if(!context?.req?.headers?.cookie) {
+  if (!context?.req?.headers?.cookie) {
     return {
       redirect: {
-      destination: "/",
-    }}
-  } 
+        destination: "/",
+      },
+    };
+  }
+
+  const { token } = cookie.parse(context?.req?.headers?.cookie);
+
+  const res = await fetch(`http://admin-srv/control/posts`, {
+    method: "GET",
+    headers: {
+      Authorization: `${token}`,
+    },
+  });
+
+  if (res.status !== 200) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
+
+  const data = await res.json();
 
   return {
     props: {
-      
-    }
+      postData: data?.data,
+    },
   };
-};
+}
 
 export default Home;

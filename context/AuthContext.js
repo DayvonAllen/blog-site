@@ -50,12 +50,11 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in
   const checkUserLoggedIn = async () => {
     const res = await fetch(`https://ahara.example.com/api/user`)
-    res.json()
+    await res.json()
 
     if (res.ok) {
       setUser({user: true})
     } else {
-        console.log(user)
       setUser(null)
       router.push("/")
     }

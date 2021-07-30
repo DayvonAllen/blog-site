@@ -1,15 +1,11 @@
 import Link from "next/link";
 import { useState } from "react";
-import buildClient from "../../api/buildClient";
 import moment from "moment";
 import localization from "moment/locale/ja";
+import cookie from "cookie";
 
-function Posts({ posts, serverError }) {
-  const [postArr, setPostArr] = useState(posts);
-
-  if (serverError) {
-    return <p>Loading...</p>;
-  }
+function Posts({ postData }) {
+  const [postArr, setPostArr] = useState(postData?.posts);
 
   moment.updateLocale("ja", localization);
 
@@ -29,50 +25,54 @@ function Posts({ posts, serverError }) {
             </p>
           </div>
           <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
-            {postArr.map((post) => (
-              <Link key={post.id} href={`/posts/${post?.id}`}>
-                <a>
-                  <div
-                    key={post.id}
-                    className="flex flex-col rounded-lg shadow-lg overflow-hidden"
-                  >
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-48 w-full object-cover"
-                        // src={post.imageUrl}
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
-                    </div>
-                    <div className="flex-1 bg-white p-6 flex flex-col justify-between">
-                      <div className="flex-1">
-                        <a href={post.href} className="block mt-2">
-                          <p className="text-xl font-semibold text-gray-900">
-                            {post.title}
-                          </p>
-                          <p className="mt-3 text-base text-gray-500">
-                            {post.preview}
-                          </p>
-                        </a>
+            {postArr ? (
+              postArr?.map((post) => (
+                <Link key={post.id} href={`/posts/${post?.id}`}>
+                  <a>
+                    <div
+                      key={post.id}
+                      className="flex flex-col rounded-lg shadow-lg overflow-hidden"
+                    >
+                      <div className="flex-shrink-0">
+                        <img
+                          className="h-48 w-full object-cover"
+                          // src={post.imageUrl}
+                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          alt=""
+                        />
                       </div>
-                      <div className="mt-6 flex items-center">
-                        <div className="ml-3">
-                          <div className="flex space-x-1 text-sm text-gray-500">
-                            <time
-                              dateTime={moment(post.createdAt).format("LL")}
-                            >
-                              {moment(post.createdAt).format("LL")}
-                            </time>
-                            <span aria-hidden="true">&middot;</span>
-                            <span>{post.readingTime} Read More</span>
+                      <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+                        <div className="flex-1">
+                          <a href={post.href} className="block mt-2">
+                            <p className="text-xl font-semibold text-gray-900">
+                              {post.title}
+                            </p>
+                            <p className="mt-3 text-base text-gray-500">
+                              {post.preview}
+                            </p>
+                          </a>
+                        </div>
+                        <div className="mt-6 flex items-center">
+                          <div className="ml-3">
+                            <div className="flex space-x-1 text-sm text-gray-500">
+                              <time
+                                dateTime={moment(post.createdAt).format("LL")}
+                              >
+                                {moment(post.createdAt).format("LL")}
+                              </time>
+                              <span aria-hidden="true">&middot;</span>
+                              <span>{post.readingTime} Read More</span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </Link>
-            ))}
+                  </a>
+                </Link>
+              ))
+            ) : (
+              <p>Looks like there are no posts yet...</p>
+            )}
           </div>
         </div>
       </div>
@@ -107,18 +107,38 @@ function Posts({ posts, serverError }) {
   );
 }
 export async function getServerSideProps(context) {
-  if(!context?.req?.headers?.cookie) {
+  if (!context?.req?.headers?.cookie) {
     return {
       redirect: {
-      destination: "/",
-    }}
-  } 
+        destination: "/",
+      },
+    };
+  }
+
+  const { token } = cookie.parse(context?.req?.headers?.cookie);
+
+  const res = await fetch(`http://admin-srv/control/posts`, {
+    method: "GET",
+    headers: {
+      Authorization: `${token}`,
+    },
+  });
+
+  if (res.status !== 200) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
+
+  const data = await res.json();
 
   return {
     props: {
-      
-    }
+      postData: data?.data,
+    },
   };
-};
+}
 
 export default Posts;

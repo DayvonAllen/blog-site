@@ -150,7 +150,7 @@ export default function Create() {
                       Save
                     </button>
                   </div>
-                  <div className="flex-auto ">
+                  <div className="flex-auto">
                   <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>

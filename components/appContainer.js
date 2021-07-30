@@ -26,7 +26,6 @@ export async function getServerSideProps(context) {
   let auth = false
 
   if(context?.ctx?.req?.headers?.cookie) {
-    console.log("ran")
     return {
       redirect: {
       destination: "/home",

@@ -1,4 +1,48 @@
+import axios from "axios";
+import { Fragment, useState } from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, SelectorIcon  } from "@heroicons/react/solid";
+
+const people = [
+  { id: 1, name: 'Wade Cooper' },
+  { id: 2, name: 'Arlene Mccoy' },
+  { id: 3, name: 'Devon Webb' },
+  { id: 4, name: 'Tom Cook' },
+  { id: 5, name: 'Tanya Fox' },
+  { id: 6, name: 'Hellen Schmidt' },
+  { id: 7, name: 'Caroline Schultz' },
+  { id: 8, name: 'Mason Heaney' },
+  { id: 9, name: 'Claudie Smitham' },
+  { id: 10, name: 'Emil Schaefer' },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function Create() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [selected, setSelected] = useState(people[3])
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const data = await axios.post(
+      "https://ahara.example.com/api/create",
+      { title, content },
+      { useCredentials: true }
+    );
+    if (data.status === 201) {
+      console.log("success");
+      setContent("");
+      setTitle("");
+    } else {
+      console.log("err");
+    }
+
+    setContent("");
+    setTitle("");
+  };
   return (
     <>
       <div>
@@ -23,6 +67,8 @@ export default function Create() {
                           type="text"
                           name="title"
                           id="title"
+                          onChange={(e) => setTitle(e.target.value)}
+                          value={title}
                           className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                           placeholder="My Post"
                         />
@@ -43,9 +89,11 @@ export default function Create() {
                         name="content"
                         rows={30}
                         columns={30}
+                        onChange={(e) => setContent(e.target.value)}
                         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                         placeholder="Content..."
                         defaultValue={""}
+                        value={content}
                       />
                     </div>
                   </div>
@@ -91,13 +139,80 @@ export default function Create() {
                     </div>
                   </div>
                 </div>
-                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+
+                <div className="px-4 py-3 bg-gray-50 flex sm:px-6">
+                  <div className="flex-1">
+                    <button
+                      type="submit"
+                      onClick={onSubmit}
+                      className="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <div className="flex-auto ">
+                  <Listbox value={selected} onChange={setSelected}>
+      {({ open }) => (
+        <>
+          <div className="relative lg:w-full lg:ml-64 md:ml-20">
+          <span className="text-sm font-medium text-gray-700">Tag: </span>
+            <Listbox.Button className=" relative w-1/2 bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <span className="block truncate">{selected.name}</span>
+              <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </span>
+            </Listbox.Button>
+
+            <Transition
+              show={open}
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Listbox.Options
+                static
+                className="absolute z-10 mt-1 w-1/2 ml-7 bg-white shadow-lg max-h-60 h-20 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+              >
+                {people.map((person) => (
+                  <Listbox.Option
+                    key={person.id}
+                    className={({ active }) =>
+                      classNames(
+                        active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                        'cursor-default select-none relative py-2 pl-8 pr-4'
+                      )
+                    }
+                    value={person}
                   >
-                    Save
-                  </button>
+                    {({ selected, active }) => (
+                      <>
+                        <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                          {person.name}
+                        </span>
+
+                        {selected ? (
+                          <span
+                            className={classNames(
+                              active ? 'text-white' : 'text-indigo-600',
+                              'absolute inset-y-0 left-0 flex items-center pl-1.5'
+                            )}
+                          >
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null}
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Transition>
+          </div>
+        </>
+      )}
+    </Listbox>
+
+                  </div>
                 </div>
               </div>
             </form>
@@ -109,16 +224,15 @@ export default function Create() {
 }
 
 export async function getServerSideProps(context) {
-  if(!context?.req?.headers?.cookie) {
+  if (!context?.req?.headers?.cookie) {
     return {
       redirect: {
-      destination: "/",
-    }}
-  } 
+        destination: "/",
+      },
+    };
+  }
 
   return {
-    props: {
-      
-    }
+    props: {},
   };
-};
+}
